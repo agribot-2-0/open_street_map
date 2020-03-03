@@ -51,9 +51,10 @@ from geographic_msgs.srv import GetGeographicMapResponse
 from osm_cartography import xml_map
 
 class ServerNode:
-    
+
     def __init__(self):
         rospy.init_node('osm_server')
+        self.frame_id = rospy.get_param('~frame_id', 'map')
         self.srv = rospy.Service('get_geographic_map', GetGeographicMap,
                                  self.map_server)
         self.resp = None
@@ -69,7 +70,7 @@ class ServerNode:
         rospy.loginfo('[get_geographic_map] ' + url)
 
         # if empty URL, return existing map
-        if url == '' and self.resp is not None: 
+        if url == '' and self.resp is not None:
             return self.resp
 
         self.resp = GetGeographicMapResponse()
@@ -83,7 +84,7 @@ class ServerNode:
             self.resp.success = True
             self.resp.status = url
             self.resp.map.header.stamp = rospy.Time()
-            self.resp.map.header.frame_id = '/map'
+            self.resp.map.header.frame_id = self.frame_id
         return self.resp
 
     def run(self):

@@ -1,6 +1,7 @@
 <!-- Launch file for visualizing OSM data
 
      arg: url = URL for map data
+     arg: frame_id = frame id for GetGeographicMap server response
 
      $Id$
   -->
@@ -8,9 +9,12 @@
 <launch>
 
   <arg name="url" default="package://osm_cartography/tests/prc.osm" />
+  <arg name="frame_id" default="map" />
 
-  <!-- start map server -->
-  <node pkg="osm_cartography" type="osm_server" name="osm_server" />
+     <!-- start map server -->
+  <node pkg="osm_cartography" type="osm_server" name="osm_server" >
+    <param name="frame_id" value="$(arg frame_id)" />
+  </node>
 
   <!-- start map visualization -->
   <node pkg="osm_cartography" type="viz_osm" name="viz_osm" >
